@@ -23,6 +23,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator", "/actuator/**")
+                        .hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/products/**")
                         .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/products/**")
