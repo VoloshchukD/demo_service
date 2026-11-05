@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    long countByQuantityLessThan(int quantity);
+
+    long countByQuantityLessThanEqual(int quantity);
+
 }
