@@ -2,7 +2,11 @@ package com.dev.demo_service.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.grpc.server.security.AuthenticationProcessInterceptor;
+import org.springframework.grpc.server.security.GrpcSecurity;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,6 +38,14 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt ->
                         jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();
+    }
+
+    @Bean
+    @Profile("local")
+    AuthenticationProcessInterceptor grpcAuthenticationProcessInterceptor(GrpcSecurity grpcSecurity) throws Exception {
+        grpcSecurity.authorizeRequests(requests -> requests.allRequests().permitAll());
+        grpcSecurity.oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()));
+        return grpcSecurity.build();
     }
 
     @Bean
